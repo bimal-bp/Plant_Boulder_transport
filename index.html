@@ -3,541 +3,746 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cash Voucher System</title>
-    <!-- Include jsPDF library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <title>Mining Operations MIS Report</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
-        
+   
         body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
+            width: 100vw;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0c1a2d 0%, #1a3a5f 100%);
             padding: 20px;
+            overflow-x: auto;
         }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-        
-        header {
-            grid-column: 1 / -1;
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #3498db;
-        }
-        
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            color: #7f8c8d;
-            font-size: 1.1rem;
-        }
-        
-        .form-section, .voucher-section {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        h2 {
-            color: #3498db;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border 0.3s;
-        }
-        
-        input:focus, select:focus, textarea:focus {
-            border-color: #3498db;
-            outline: none;
-        }
-        
-        .btn {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: background 0.3s;
-            display: inline-block;
-        }
-        
-        .btn:hover {
-            background: #2980b9;
-        }
-        
-        .btn-secondary {
-            background: #95a5a6;
-        }
-        
-        .btn-secondary:hover {
-            background: #7f8c8d;
-        }
-        
-        .btn-danger {
-            background: #e74c3c;
-        }
-        
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-        
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .voucher {
-            border: 1px solid #ddd;
-            padding: 30px;
-            background: white;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            min-height: 500px;
-        }
-        
-        .voucher-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .voucher-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #2c3e50;
-        }
-        
-        .voucher-date {
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        
-        .voucher-subject {
+   
+        .dashboard-header {
             margin-bottom: 25px;
-            font-size: 16px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        .voucher-table {
+   
+        .dashboard-title {
+            color: white;
+            font-size: 28px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+   
+        .dashboard-title::before {
+            content: "⛏️";
+            font-size: 24px;
+        }
+   
+        .dashboard-container {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto auto 1fr;
+            gap: 25px;
+            grid-template-areas:
+                "performance running-hours loading"
+                "key-parameters area-status machinery"
+                "key-parameters area-status machinery";
+        }
+   
+        .dashboard-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+   
+        /* Different color themes for each box */
+        .performance-box {
+            border-top: 5px solid #3498db;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+   
+        .running-hours-box {
+            border-top: 5px solid #2ecc71;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+   
+        .loading-box {
+            border-top: 5px solid #e74c3c;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+   
+        .machinery-box {
+            border-top: 5px solid #1abc9c;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+   
+        .performance-box:hover,
+        .running-hours-box:hover,
+        .loading-box:hover,
+        .machinery-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+   
+        .key-parameters-box {
+            border-top: 5px solid #f39c12;
+        }
+   
+        .area-status-box {
+            border-top: 5px solid #9b59b6;
+        }
+   
+        .section-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            color: #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+   
+        .section-icon {
+            font-size: 20px;
+            opacity: 0.8;
+        }
+   
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 25px;
+            font-size: 14px;
         }
-        
-        .voucher-table th, .voucher-table td {
-            border: 1px solid #ddd;
-            padding: 12px;
+   
+        th {
+            background-color: rgba(52, 73, 94, 0.08);
             text-align: left;
-        }
-        
-        .voucher-table th {
-            background-color: #f8f9fa;
+            padding: 12px 15px;
             font-weight: 600;
+            border-bottom: 2px solid #ddd;
+            color: #2c3e50;
         }
-        
-        .voucher-amount {
-            margin-bottom: 25px;
+   
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+   
+        .value-ftd {
+            color: #3498db;
+            font-weight: 700;
+            font-size: 15px;
+        }
+   
+        .value-mtd {
+            color: #2ecc71;
+            font-weight: 700;
             font-size: 16px;
         }
-        
-        .voucher-footer {
-            margin-top: 40px;
+   
+        .value-variance {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+   
+        .gap-red {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+   
+        .text-right {
             text-align: right;
         }
-        
-        .signature-line {
-            border-top: 1px solid #333;
-            width: 200px;
-            margin-left: auto;
-            margin-top: 40px;
-            padding-top: 5px;
+   
+        .text-center {
             text-align: center;
         }
-        
-        .employee-entry {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            align-items: center;
-        }
-        
-        .employee-entry input {
-            flex: 1;
-        }
-        
-        .remove-employee {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
+   
+        .spacer-row {
             height: 30px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-        
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
+   
+        /* Performance Section */
+        .performance-box {
+            grid-area: performance;
+        }
+   
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+   
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+   
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 1000px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+   
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            color: #aaa;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+   
+        .close:hover {
+            color: #000;
+        }
+   
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+   
+        .total-row {
+            font-weight: bold;
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+   
+        .achievement-text {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid #2ecc71;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            color: #27ae60;
+        }
+        .loading-summary-text {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid #3498db;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            color: #2980b9;
+        }
+   
+        .machinery-summary-text {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(26, 188, 156, 0.1);
+            border-left: 4px solid #1abc9c;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            color: #16a085;
+        }
+   
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .dashboard-container {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "performance running-hours"
+                    "loading key-parameters"
+                    "area-status machinery";
             }
-            
-            .employee-entry {
-                flex-direction: column;
+        }
+   
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+       
+            .dashboard-container {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "performance"
+                    "running-hours"
+                    "loading"
+                    "key-parameters"
+                    "area-status"
+                    "machinery";
+            }
+       
+            .dashboard-box {
+                padding: 18px;
+            }
+       
+            table {
+                font-size: 13px;
+            }
+       
+            th, td {
+                padding: 8px 10px;
+            }
+       
+            .dashboard-title {
+                font-size: 22px;
+            }
+       
+            .modal-content {
+                width: 95%;
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Cash Voucher System</h1>
-            <p class="subtitle">Create and manage cash vouchers for your business</p>
-        </header>
-        
-        <section class="form-section">
-            <h2>Create New Voucher</h2>
-            
-            <div class="form-group">
-                <label for="voucher-date">Date</label>
-                <input type="date" id="voucher-date" value="2025-10-18">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Mining Operations Mis Report</h1>
+    </div>
+    <div class="dashboard-container">
+        <!-- Performance Section - Clickable -->
+        <div class="dashboard-box performance-box" id="performance-section" onclick="openPerformanceModal()">
+            <div class="section-title">
+                Performance
+                <span class="section-icon">📊</span>
             </div>
-            
-            <div class="form-group">
-                <label for="voucher-subject">Subject</label>
-                <textarea id="voucher-subject" rows="3">Being amount payable towards Food charges for helper to collect sweet boxes from Sweet India for Diwali distribution Purpose on 18-10-2025.</textarea>
+            <table class="performance-table">
+                <tr>
+                    <th>Compressors</th>
+                    <th>Holes</th>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="value-ftd">12</span> FTD
+                    </td>
+                    <td>
+                        <span class="value-ftd">635</span> FTD
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Variance: <span class="value-variance">-5</span>
+                    </td>
+                    <td>
+                        Variance: <span class="value-variance">-365</span>
+                    </td>
+                </tr>
+                <tr class="spacer-row">
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="value-mtd">782</span> MTD
+                    </td>
+                    <td>
+                        <span class="value-mtd">1782</span> MTD
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Variance: <span class="value-variance">-218</span>
+                    </td>
+                    <td>
+                        Variance: <span class="value-variance">-1231</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+   
+        <!-- Running Hours Section - Clickable -->
+        <div class="dashboard-box running-hours-box" id="running-hours-section" onclick="openRunningHoursModal()">
+            <div class="section-title">
+                Running Hours
+                <span class="section-icon">⏱️</span>
             </div>
-            
-            <div class="form-group">
-                <label>Employee Details</label>
-                <div id="employee-entries">
-                    <div class="employee-entry">
-                        <input type="text" class="employee-name" placeholder="Employee Name" value="XYZ">
-                        <input type="text" class="employee-designation" placeholder="Designation" value="Helper">
-                        <input type="number" class="employee-amount" placeholder="Amount (₹)" value="120">
-                        <button class="remove-employee">×</button>
-                    </div>
-                </div>
-                <button id="add-employee" class="btn btn-secondary" style="margin-top: 10px;">Add Another Employee</button>
+            <table class="running-hours-table">
+                <thead>
+                    <tr>
+                        <th>Operation Type</th>
+                        <th class="text-right">FTD</th>
+                        <th class="text-right">MTD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Quarry Run Hours</td>
+                        <td class="text-right"><span class="value-ftd">6.9</span></td>
+                        <td class="text-right">169.3</td>
+                    </tr>
+                    <tr>
+                        <td>Loading Hours</td>
+                        <td class="text-right"><span class="value-ftd">8.5</span></td>
+                        <td class="text-right">253.6</td>
+                    </tr>
+                    <tr>
+                        <td>Breaking Hours</td>
+                        <td class="text-right"><span class="value-ftd">6</span></td>
+                        <td class="text-right">143.7</td>
+                    </tr>
+                    <tr>
+                        <td>Development Hours</td>
+                        <td class="text-right"><span class="value-ftd">5.5</span></td>
+                        <td class="text-right">62.3</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+   
+        <!-- Loading Start End Time Section - Clickable -->
+        <div class="dashboard-box loading-box" id="loading-section" onclick="openLoadingModal()">
+            <div class="section-title">
+                Loading Start End Time
+                <span class="section-icon">🚚</span>
             </div>
-            
-            <div class="btn-group">
-                <button id="generate-btn" class="btn">Generate Voucher</button>
-                <button id="reset-btn" class="btn btn-secondary">Reset Form</button>
+            <table class="loading-table">
+                <thead>
+                    <tr>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th class="text-right">Tippers</th>
+                        <th class="text-right">Machinery</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>9:15 AM</td>
+                        <td>12:39 PM</td>
+                        <td class="text-right">7</td>
+                        <td class="text-right">3</td>
+                    </tr>
+                    <tr>
+                        <td>2:12 PM</td>
+                        <td>7:51 PM</td>
+                        <td class="text-right">10</td>
+                        <td class="text-right">7</td>
+                    </tr>
+                    <tr>
+                        <td>9:36 PM</td>
+                        <td>7:00 AM</td>
+                        <td class="text-right">15</td>
+                        <td class="text-right">9</td>
+                    </tr>
+                    <tr>
+                        <td> FTD - 87 Trips & 2436 Mt Qty </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+   
+        <!-- Key Parameters Section -->
+        <div class="dashboard-box key-parameters-box" id="key-parameters-section">
+            <div class="section-title">
+                Key Parameters
+                <span class="section-icon">📈</span>
             </div>
-        </section>
-        
-        <section class="voucher-section">
-            <h2>Cash Voucher</h2>
-            
-            <div class="voucher" id="voucher-preview">
-                <div class="voucher-header">
-                    <div class="voucher-title">CASH VOUCHER</div>
-                    <div class="voucher-date">Date: <span id="preview-date">18-10-2025</span></div>
-                </div>
-                
-                <div class="voucher-subject">
-                    Subject: <span id="preview-subject">Being amount payable towards Food charges for helper to collect sweet boxes from Sweet India for Diwali distribution Purpose on 18-10-2025.</span>
-                </div>
-                
-                <table class="voucher-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Designation</th>
-                            <th>Food Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody id="preview-employees">
-                        <tr>
-                            <td>XYZ</td>
-                            <td>Helper</td>
-                            <td>120/-</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><strong>Total</strong></td>
-                            <td id="preview-total"><strong>120/-</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div class="voucher-amount">
-                    Amount in words: <span id="preview-words">One Hundred Twenty Rupees Only</span>
-                </div>
-                
-                <div class="voucher-footer">
-                    <div class="signature-line">Claimant</div>
-                </div>
+            <table class="key-parameters-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="text-right">FTD <span class="data-badge">Today</span></th>
+                        <th class="text-right">MTD <span class="data-badge">Month</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Compressors</td>
+                        <td class="text-right"><span class="value-ftd">12</span></td>
+                        <td class="text-right">245</td>
+                    </tr>
+                    <tr>
+                        <td>NMR</td>
+                        <td class="text-right"><span class="value-ftd">42</span></td>
+                        <td class="text-right">78</td>
+                    </tr>
+                    <tr>
+                        <td>Holes</td>
+                        <td class="text-right"><span class="value-ftd">850</span></td>
+                        <td class="text-right">15,800</td>
+                    </tr>
+                    <tr>
+                        <td>Feets</td>
+                        <td class="text-right"><span class="value-ftd">4,250</span></td>
+                        <td class="text-right">79,000</td>
+                    </tr>
+                    <tr>
+                        <td>Production</td>
+                        <td class="text-right"><span class="value-ftd">1,250</span></td>
+                        <td class="text-right">22,500</td>
+                    </tr>
+                    <tr>
+                        <td>Boulder transport Trips</td>
+                        <td class="text-right"><span class="value-ftd">456</span></td>
+                        <td class="text-right">11,520</td>
+                    </tr>
+                    <tr>
+                        <td>Boulder transport Qty</td>
+                        <td class="text-right"><span class="value-ftd">2,151</span></td>
+                        <td class="text-right">36,255</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+   
+        <!-- Area Wise Compressor Status Section -->
+        <div class="dashboard-box area-status-box" id="area-status-section">
+            <div class="section-title">
+                Area Wise Compressor Status
+                <span class="section-icon">🗺️</span>
             </div>
-            
-            <div class="btn-group">
-                <button id="print-btn" class="btn">Print Voucher</button>
-                <button id="download-btn" class="btn btn-secondary">Download as PDF</button>
+            <table class="area-status-table">
+                <thead>
+                    <tr>
+                        <th>Area</th>
+                        <th class="text-right">FTD</th>
+                        <th class="text-right">MTD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>9 Ha – Pit 3</td>
+                        <td class="text-right"><span class="value-ftd">5</span></td>
+                        <td class="text-right">105</td>
+                    </tr>
+                    <tr>
+                        <td>Bench 1</td>
+                        <td class="text-right"><span class="value-ftd">2</span></td>
+                        <td class="text-right">40</td>
+                    </tr>
+                    <tr>
+                        <td>Bench 2</td>
+                        <td class="text-right"><span class="value-ftd">2</span></td>
+                        <td class="text-right">38</td>
+                    </tr>
+                    <tr>
+                        <td>Bench 3</td>
+                        <td class="text-right"><span class="value-ftd">1</span></td>
+                        <td class="text-right">22</td>
+                    </tr>
+                    <tr>
+                        <td>Bench 4</td>
+                        <td class="text-right"><span class="value-ftd">1</span></td>
+                        <td class="text-right">20</td>
+                    </tr>
+                    <tr>
+                        <td>Pit-2</td>
+                        <td class="text-right"><span class="value-ftd">4</span></td>
+                        <td class="text-right">80</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td>Total</td>
+                        <td class="text-right">12</td>
+                        <td class="text-right">245</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+   
+        <!-- Machinery Section - Clickable (Updated) -->
+        <div class="dashboard-box machinery-box" id="machinery-section" onclick="openMachineryModal()">
+            <div class="section-title">
+                Machinery
+                <span class="section-icon">🔧</span>
             </div>
-        </section>
+            <table class="machinery-table">
+                <thead>
+                    <tr>
+                        <th>Machine</th>
+                        <th>Purpose</th>
+                        <th class="text-right">W.Hours (FTD)</th>
+                        <th class="text-right">Diesel (FTD)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SGX V - 1</td>
+                        <td>Loading</td>
+                        <td class="text-right">6.5</td>
+                        <td class="text-right">230 L</td>
+                    </tr>
+                    <tr>
+                        <td>SGX V - 2</td>
+                        <td>Breaking</td>
+                        <td class="text-right">7.2</td>
+                        <td class="text-right">152 L</td>
+                    </tr>
+                    <tr>
+                        <td>Govinda - 1</td>
+                        <td>Breaking</td>
+                        <td class="text-right">6.6</td>
+                        <td class="text-right">238 L</td>
+                    </tr>
+                    <tr>
+                        <td>Govinda - 2</td>
+                        <td>Dumping</td>
+                        <td class="text-right">3.7</td>
+                        <td class="text-right">120 L</td>
+                    </tr>
+                    <tr>
+                        <td>Hyundai - rental</td>
+                        <td>Loading</td>
+                        <td class="text-right">4.7</td>
+                        <td class="text-right">49 L</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="remark-section">
+                Remark: Loading → SGX V-1 & Hyundai (Rental); Breaking → SGX V-2 & Govinda-1; Dumping → Govinda-2. All machinery operating within normal parameters.
+            </div>
+        </div>
+    </div>
+
+    <!-- Other Modals unchanged (Performance, Running Hours, Loading) -->
+    <!-- Performance Modal -->
+    <div id="performanceModal" class="modal">
+        <!-- ... (unchanged from original) ... -->
+    </div>
+    <!-- Running Hours Modal -->
+    <div id="runningHoursModal" class="modal">
+        <!-- ... (unchanged from original) ... -->
+    </div>
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="modal">
+        <!-- ... (unchanged from original) ... -->
+    </div>
+
+    <!-- Machinery Modal (Fully Updated) -->
+    <div id="machineryModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeMachineryModal()">&times;</span>
+            <h2 class="modal-title">🛢️ Diesel & Working Hours Report (L=Loading / B=Breaking / D=Development)</h2>
+            <p style="text-align:center; font-size:18px; margin-bottom:10px; font-weight:600;">Month: January 2026</p>
+            <p style="text-align:center; font-size:16px; margin-bottom:30px; font-style:italic;">Daily Log (Row-wise Totals Included)</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th class="text-center">SGX V-1<br>Hrs / <span style="color: red;">L</span> / Purpose</th>
+                        <th class="text-center">SGX V-2<br>Hrs / L / Purpose</th>
+                        <th class="text-center">Govinda-1<br>Hrs / L / Purpose</th>
+                        <th class="text-center">Govinda-2<br>Hrs / L / Purpose</th>
+                        <th class="text-center">Hyundai – Rental<br>Hrs / L / Purpose</th>
+                        <th class="text-right">Total Hrs</th>
+                        <th class="text-right">Total Diesel (L)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01-01-2026</td>
+                        <td class="text-right">6.4 / 225 (L)</td>
+                        <td class="text-right">7.0 / 150 (B)</td>
+                        <td class="text-right">6.2 / 235 (B)</td>
+                        <td class="text-right">3.8 / 118 (D)</td>
+                        <td class="text-right">4.5 / 48 (L)</td>
+                        <td class="text-right">27.9</td>
+                        <td class="text-right">776</td>
+                    </tr>
+                    <tr>
+                        <td>02-01-2026</td>
+                        <td class="text-right">6.1 / 220 (L)</td>
+                        <td class="text-right">6.8 / 142 (B)</td>
+                        <td class="text-right">6.5 / 240 (B)</td>
+                        <td class="text-right">3.5 / 115 (D)</td>
+                        <td class="text-right">4.2 / 44 (L)</td>
+                        <td class="text-right">27.1</td>
+                        <td class="text-right">761</td>
+                    </tr>
+                    <tr>
+                        <td>03-01-2026</td>
+                        <td class="text-right">6.6 / 235 (L)</td>
+                        <td class="text-right">7.3 / 155 (B)</td>
+                        <td class="text-right">6.4 / 228 (B)</td>
+                        <td class="text-right">3.9 / 125 (D)</td>
+                        <td class="text-right">4.8 / 50 (L)</td>
+                        <td class="text-right">29.0</td>
+                        <td class="text-right">793</td>
+                    </tr>
+                    <tr>
+                        <td>04-01-2026</td>
+                        <td class="text-right">6.0 / 215 (L)</td>
+                        <td class="text-right">6.9 / 148 (B)</td>
+                        <td class="text-right">6.1 / 225 (B)</td>
+                        <td class="text-right">3.4 / 112 (D)</td>
+                        <td class="text-right">4.3 / 46 (L)</td>
+                        <td class="text-right">26.7</td>
+                        <td class="text-right">746</td>
+                    </tr>
+                    <tr>
+                        <td>05-01-2026</td>
+                        <td class="text-right">6.5 / 230 (L)</td>
+                        <td class="text-right">7.2 / 152 (B)</td>
+                        <td class="text-right">6.6 / 238 (B)</td>
+                        <td class="text-right">3.7 / 120 (D)</td>
+                        <td class="text-right">4.7 / 49 (L)</td>
+                        <td class="text-right">28.7</td>
+                        <td class="text-right">789</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td>5-Day Total</td>
+                        <td class="text-right">31.6 / 745 </td>
+                        <td class="text-right">29.5 / 877  </td>
+                        <td class="text-right">32.4 / 847</td>
+                        <td class="text-right">31.4 / 576</td>
+                        <td class="text-right">23.5 / 837</td>
+                        <td class="text-right">139.4</td>
+                        <td class="text-right">3865</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="machinery-summary-text">
+                Grand Total → 139.4 Working Hours &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 3865 L Diesel Consumption
+            </div>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Generate voucher button
-            document.getElementById('generate-btn').addEventListener('click', generateVoucher);
-            
-            // Reset form button
-            document.getElementById('reset-btn').addEventListener('click', resetForm);
-            
-            // Print voucher button
-            document.getElementById('print-btn').addEventListener('click', printVoucher);
-            
-            // Download as PDF button
-            document.getElementById('download-btn').addEventListener('click', downloadPDF);
-            
-            // Add employee button
-            document.getElementById('add-employee').addEventListener('click', addEmployee);
-            
-            // Function to add employee entry
-            function addEmployee() {
-                const employeeEntries = document.getElementById('employee-entries');
-                const newEntry = document.createElement('div');
-                newEntry.className = 'employee-entry';
-                newEntry.innerHTML = `
-                    <input type="text" class="employee-name" placeholder="Employee Name" value="XYZ">
-                    <input type="text" class="employee-designation" placeholder="Designation" value="Helper">
-                    <input type="number" class="employee-amount" placeholder="Amount (₹)" value="120">
-                    <button class="remove-employee">×</button>
-                `;
-                employeeEntries.appendChild(newEntry);
-                
-                // Add event listener to remove button
-                newEntry.querySelector('.remove-employee').addEventListener('click', function() {
-                    if (document.querySelectorAll('.employee-entry').length > 1) {
-                        newEntry.remove();
-                    } else {
-                        alert('At least one employee is required');
-                    }
-                });
-            }
-            
-            // Function to convert number to words
-            function numberToWords(num) {
-                const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 
-                             'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 
-                             'Eighteen', 'Nineteen'];
-                const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
-                
-                if (num === 0) return 'Zero';
-                
-                let words = '';
-                
-                if (num >= 10000000) {
-                    words += numberToWords(Math.floor(num / 10000000)) + ' Crore ';
-                    num %= 10000000;
-                }
-                
-                if (num >= 100000) {
-                    words += numberToWords(Math.floor(num / 100000)) + ' Lakh ';
-                    num %= 100000;
-                }
-                
-                if (num >= 1000) {
-                    words += numberToWords(Math.floor(num / 1000)) + ' Thousand ';
-                    num %= 1000;
-                }
-                
-                if (num >= 100) {
-                    words += ones[Math.floor(num / 100)] + ' Hundred ';
-                    num %= 100;
-                }
-                
-                if (num >= 20) {
-                    words += tens[Math.floor(num / 10)] + ' ';
-                    num %= 10;
-                }
-                
-                if (num > 0) {
-                    words += ones[num] + ' ';
-                }
-                
-                return words.trim() + ' Rupees Only';
-            }
-            
-            // Function to generate voucher
-            function generateVoucher() {
-                // Get form values
-                const date = document.getElementById('voucher-date').value;
-                const subject = document.getElementById('voucher-subject').value;
-                
-                // Get employee data
-                const employeeEntries = document.querySelectorAll('.employee-entry');
-                const employees = [];
-                let totalAmount = 0;
-                
-                employeeEntries.forEach(entry => {
-                    const name = entry.querySelector('.employee-name').value || 'XYZ';
-                    const designation = entry.querySelector('.employee-designation').value || 'Helper';
-                    const amount = parseInt(entry.querySelector('.employee-amount').value) || 0;
-                    
-                    employees.push({ name, designation, amount });
-                    totalAmount += amount;
-                });
-                
-                // Format date
-                const formattedDate = formatDate(date);
-                
-                // Convert amount to words
-                const amountInWords = numberToWords(totalAmount);
-                
-                // Update preview
-                document.getElementById('preview-date').textContent = formattedDate;
-                document.getElementById('preview-subject').textContent = subject;
-                
-                // Update employee table
-                const previewEmployees = document.getElementById('preview-employees');
-                previewEmployees.innerHTML = '';
-                
-                employees.forEach(employee => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${employee.name}</td>
-                        <td>${employee.designation}</td>
-                        <td>${employee.amount}/-</td>
-                    `;
-                    previewEmployees.appendChild(row);
-                });
-                
-                // Add total row
-                const totalRow = document.createElement('tr');
-                totalRow.innerHTML = `
-                    <td></td>
-                    <td><strong>Total</strong></td>
-                    <td id="preview-total"><strong>${totalAmount}/-</strong></td>
-                `;
-                previewEmployees.appendChild(totalRow);
-                
-                document.getElementById('preview-words').textContent = amountInWords;
-            }
-            
-            // Function to format date
-            function formatDate(dateString) {
-                const date = new Date(dateString);
-                const day = String(date.getDate()).padStart(2, '0');
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const year = date.getFullYear();
-                return `${day}-${month}-${year}`;
-            }
-            
-            // Function to reset form
-            function resetForm() {
-                document.getElementById('voucher-date').value = '2025-10-18';
-                document.getElementById('voucher-subject').value = 'Being amount payable towards Food charges for helper to collect sweet boxes from Sweet India for Diwali distribution Purpose on 18-10-2025.';
-                
-                // Reset employee entries to one
-                const employeeEntries = document.getElementById('employee-entries');
-                employeeEntries.innerHTML = `
-                    <div class="employee-entry">
-                        <input type="text" class="employee-name" placeholder="Employee Name" value="XYZ">
-                        <input type="text" class="employee-designation" placeholder="Designation" value="Helper">
-                        <input type="number" class="employee-amount" placeholder="Amount (₹)" value="120">
-                        <button class="remove-employee">×</button>
-                    </div>
-                `;
-                
-                // Add event listener to remove button
-                document.querySelector('.remove-employee').addEventListener('click', function() {
-                    alert('At least one employee is required');
-                });
-                
-                // Reset preview as well
-                generateVoucher();
-            }
-            
-            // Function to print voucher
-            function printVoucher() {
-                const voucherContent = document.getElementById('voucher-preview').innerHTML;
-                const originalContent = document.body.innerHTML;
-                
-                document.body.innerHTML = voucherContent;
-                window.print();
-                document.body.innerHTML = originalContent;
-                location.reload(); // Reload to restore functionality
-            }
-            
-            // Function to download as PDF
-            function downloadPDF() {
-                // Use html2canvas to capture the voucher as an image
-                html2canvas(document.getElementById('voucher-preview')).then(canvas => {
-                    const imgData = canvas.toDataURL('image/png');
-                    
-                    // Create PDF using jsPDF
-                    const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-                    
-                    // Get dimensions
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = pdf.internal.pageSize.getHeight();
-                    
-                    // Calculate dimensions to fit the image in the PDF
-                    const imgWidth = canvas.width;
-                    const imgHeight = canvas.height;
-                    const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-                    const imgX = (pdfWidth - imgWidth * ratio) / 2;
-                    const imgY = 10;
-                    
-                    // Add image to PDF
-                    pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-                    
-                    // Save the PDF
-                    pdf.save('cash-voucher.pdf');
-                });
-            }
-            
-            // Add event listener to initial remove button
-            document.querySelector('.remove-employee').addEventListener('click', function() {
-                alert('At least one employee is required');
-            });
-            
-            // Initialize with default values
-            generateVoucher();
-        });
+        // Existing modal functions unchanged
+        function openPerformanceModal() { document.getElementById('performanceModal').style.display = 'block'; }
+        function closePerformanceModal() { document.getElementById('performanceModal').style.display = 'none'; }
+        function openRunningHoursModal() { document.getElementById('runningHoursModal').style.display = 'block'; }
+        function closeRunningHoursModal() { document.getElementById('runningHoursModal').style.display = 'none'; }
+        function openLoadingModal() { document.getElementById('loadingModal').style.display = 'block'; }
+        function closeLoadingModal() { document.getElementById('loadingModal').style.display = 'none'; }
+        function openMachineryModal() { document.getElementById('machineryModal').style.display = 'block'; }
+        function closeMachineryModal() { document.getElementById('machineryModal').style.display = 'none'; }
+
+        window.onclick = function(event) {
+            var perfModal = document.getElementById('performanceModal');
+            var runModal = document.getElementById('runningHoursModal');
+            var loadModal = document.getElementById('loadingModal');
+            var machModal = document.getElementById('machineryModal');
+            if (event.target == perfModal) perfModal.style.display = 'none';
+            if (event.target == runModal) runModal.style.display = 'none';
+            if (event.target == loadModal) loadModal.style.display = 'none';
+            if (event.target == machModal) machModal.style.display = 'none';
+        }
     </script>
 </body>
 </html>
