@@ -5,222 +5,991 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mining Operations MIS Report</title>
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',system-ui,sans-serif; }
-        body { background:#f4f7fc; color:#2c3e50; padding:30px 20px; min-height:100vh; }
-        .dashboard-header { margin-bottom:40px; text-align:center; }
-        .dashboard-title { color:#1e3a5f; font-size:34px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:14px; }
-        .dashboard-title::before { content:"⛏️"; font-size:42px; }
-        .dashboard-container { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; max-width:1400px; margin:0 auto; }
-        .dashboard-box { background:white; border-radius:16px; padding:28px; box-shadow:0 6px 24px rgba(0,0,0,0.07); border:1px solid #e9eef4; transition:transform 0.2s, box-shadow 0.2s; }
-        .dashboard-box:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.1); }
-        .performance-box { border-top:6px solid #3498db; }
-        .running-hours-box { border-top:6px solid #27ae60; }
-        .loading-box { border-top:6px solid #e74c3c; }
-        .key-parameters-box { border-top:6px solid #f39c12; }
-        .area-status-box { border-top:6px solid #9b59b6; }
-        .machinery-box { border-top:6px solid #16a085; }
-        .section-title { font-weight:700; font-size:22px; margin-bottom:20px; padding-bottom:12px; border-bottom:2px solid #eef2f6; color:#34495e; display:flex; justify-content:space-between; align-items:center; }
-        table { width:100%; border-collapse:collapse; font-size:15px; }
-        th, td { padding:12px 14px; }
-        th { background:#f8fafc; text-align:left; font-weight:600; color:#34495e; border-bottom:2px solid #e2e8f0; }
-        .value-ftd { color:#2c5282; font-weight:800; font-size:18px; }
-        .value-mtd { color:#22543d; font-weight:800; font-size:19px; }
-        .value-variance { color:#c53030; font-weight:700; }
-        .text-right { text-align:right; }
-        .text-center { text-align:center; }
-        .spacer-row { height:20px; }
-        .performance-stats { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:12px; }
-        .stat-card { background:#f8fafc; border-radius:12px; padding:18px; border:1px solid #e2e8f0; }
-        .stat-title { font-size:14px; color:#4a5568; margin-bottom:8px; font-weight:600; }
-        .stat-value { font-size:28px; font-weight:800; margin-bottom:6px; }
-        .stat-ftd { color:#2b6cb0; }
-        .stat-mtd { color:#2f855a; }
-        .variance { font-size:15px; font-weight:600; }
-        .negative { color:#c53030; }
-        .action-buttons { display:flex; justify-content:center; gap:16px; margin:48px auto 20px; max-width:1400px; flex-wrap:wrap; }
-        .action-btn { background:#4a5568; color:white; border:none; padding:12px 20px; font-size:14px; font-weight:600; border-radius:50px; cursor:pointer; transition:all 0.2s; min-width:140px; text-align:center; }
-        .action-btn:hover { background:#2d3748; transform:translateY(-2px); }
-        .action-btn.trial      { background:#3182ce; }
-        .action-btn.trial:hover      { background:#2b6cb0; }
-        .action-btn.explosive  { background:#d69e2e; }
-        .action-btn.explosive:hover  { background:#b7791f; }
-        .action-btn.compressor { background:#38a169; }
-        .action-btn.compressor:hover { background:#2f855a; }
-        .action-btn.nmr        { background:#805ad5; }
-        .action-btn.nmr:hover        { background:#6b46c1; }
-        .action-btn.revenue    { background:#e53e3e; }
-        .action-btn.revenue:hover    { background:#c53030; }
-        .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.65); overflow:auto; padding:30px 15px; }
-        .modal-content { background:white; margin:5% auto; padding:32px; border-radius:16px; width:92%; max-width:1100px; box-shadow:0 15px 40px rgba(0,0,0,0.25); position:relative; }
-        .close { position:absolute; top:18px; right:28px; font-size:48px; font-weight:bold; color:#718096; cursor:pointer; }
-        .close:hover { color:#2d3748; }
-        .modal-title { font-size:28px; font-weight:700; margin-bottom:28px; color:#2c3e50; text-align:center; }
-        .highlight-box { margin-top:24px; padding:18px; border-radius:10px; text-align:center; font-size:17px; font-weight:600; }
-        @media (max-width:1200px) { .dashboard-container { grid-template-columns:1fr 1fr; } }
-        @media (max-width:768px) { .dashboard-container { grid-template-columns:1fr; } .performance-stats { grid-template-columns:1fr; } .action-buttons { flex-direction:column; align-items:center; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        body {
+            background: #f8f9fa;
+            color: #333;
+            padding: 25px;
+            min-height: 100vh;
+        }
+        .dashboard-header {
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .dashboard-title {
+            color: #1a3c5e;
+            font-size: 32px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .dashboard-title::before {
+            content: "💥";
+            font-size: 40px;
+        }
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            grid-template-areas:
+                "performance running-hours loading"
+                "key-parameters area-status machinery"
+                "key-parameters area-status machinery";
+        }
+        
+        /* Modern Performance Section */
+        .performance-modern {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .performance-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+        .performance-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+        }
+        .performance-card:nth-child(2)::before {
+            background: linear-gradient(90deg, #27ae60 0%, #219653 100%);
+        }
+        .performance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .performance-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        .performance-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .performance-values {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .value-group {
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e8ecef;
+        }
+        .value-label {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .value-main {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .value-ftd {
+            color: #1e90ff;
+        }
+        .value-mtd {
+            color: #10b981;
+        }
+        .variance {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(231, 76, 60, 0.1);
+            color: #c0392b;
+            display: inline-block;
+        }
+        
+        .dashboard-box {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e8ecef;
+        }
+        .performance-box { 
+            border-top: 5px solid #3498db; 
+            cursor: pointer;
+        }
+        .running-hours-box { border-top: 5px solid #27ae60; cursor: pointer; }
+        .loading-box { border-top: 5px solid #e74c3c; cursor: pointer; }
+        .key-parameters-box { border-top: 5px solid #f39c12; }
+        .area-status-box { border-top: 5px solid #9b59b6; }
+        .machinery-box { border-top: 5px solid #16a085; cursor: pointer; }
+        
+        .section-title {
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            color: #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Button Container */
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .data-button {
+            padding: 14px 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .data-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+        .data-button.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .data-button:nth-child(2) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .data-button:nth-child(3) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .data-button:nth-child(4) {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .data-button:nth-child(5) {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        }
+        
+        /* Data Display Section */
+        .data-display {
+            display: none;
+            margin-top: 25px;
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid #e8ecef;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .data-display.active {
+            display: block;
+        }
+        .data-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .data-title::before {
+            content: "📊";
+            font-size: 24px;
+        }
+        .trial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+        .trial-column {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 22px;
+        }
+        .trial-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e8ecef;
+        }
+        .trial-row:last-child {
+            border-bottom: none;
+        }
+        .trial-label {
+            font-weight: 600;
+            color: #475569;
+            font-size: 15px;
+        }
+        .trial-value {
+            font-weight: 700;
+            color: #1e40af;
+            font-size: 16px;
+        }
+        .trial-value.highlight {
+            color: #dc2626;
+            background: rgba(220, 38, 38, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+        .trial-value.green {
+            color: #059669;
+            background: rgba(5, 150, 105, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+        .progress-container {
+            margin-top: 8px;
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #475569;
+        }
+        .progress-bar {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
+            border-radius: 5px;
+        }
+        .recovery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .recovery-item {
+            background: white;
+            padding: 18px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .recovery-percent {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .recovery-label {
+            font-size: 14px;
+            color: #64748b;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14.5px;
+        }
+        th {
+            background-color: #f1f5f9;
+            text-align: left;
+            padding: 12px 14px;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+            color: #2c3e50;
+        }
+        td {
+            padding: 11px 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .spacer-row { height: 28px; }
+        .loading-ftd-highlight {
+            color: #1e90ff;
+            font-weight: 800;
+            font-size: 18px;
+            text-align: center;
+            margin: 12px 0;
+            padding: 12px;
+            background: rgba(30,144,255,0.08);
+            border-radius: 8px;
+            border: 1px solid rgba(30,144,255,0.2);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            padding: 20px;
+        }
+        .modal-content {
+            background-color: white;
+            margin: 4% auto;
+            padding: 28px;
+            border-radius: 12px;
+            width: 94%;
+            max-width: 1280px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+        .close {
+            position: absolute;
+            top: 16px;
+            right: 28px;
+            color: #888;
+            font-size: 42px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover { color: #222; }
+        .modal-title {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        .total-row {
+            font-weight: bold;
+            background-color: #f0f7ff;
+        }
+        .gap-red { color: #c0392b; font-weight: 600; }
+        .machinery-table td.hmr-combined {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 15px;
+            background: #f8fdff;
+        }
+        
+        @media (max-width: 1200px) {
+            .dashboard-container {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "performance running-hours"
+                    "loading key-parameters"
+                    "area-status machinery";
+            }
+            .trial-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .button-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container { 
+                grid-template-columns: 1fr; 
+            }
+            .trial-grid {
+                grid-template-columns: 1fr;
+            }
+            .button-container {
+                grid-template-columns: 1fr;
+            }
+            .performance-modern {
+                grid-template-columns: 1fr;
+            }
+            table { font-size: 13.5px; }
+        }
     </style>
 </head>
 <body>
-
     <div class="dashboard-header">
         <h1 class="dashboard-title">Mining Operations MIS Report - 25/01/2026</h1>
     </div>
-
+    
     <div class="dashboard-container">
-        <!-- Performance (modernized) -->
-        <div class="dashboard-box performance-box" onclick="openPerformanceModal()">
-            <div class="section-title">Performance <span>📊</span></div>
-            <div class="performance-stats">
-                <div class="stat-card">
-                    <div class="stat-title">Compressors</div>
-                    <div class="stat-value stat-ftd">12 <small>FTD</small></div>
-                    <div class="variance negative">Variance: -5</div>
-                    <div class="stat-value stat-mtd" style="margin-top:16px;">782 <small>MTD</small></div>
-                    <div class="variance negative">Variance: -218</div>
+        <!-- Modern Performance Section -->
+        <div class="dashboard-box performance-box" id="performance-section" onclick="openPerformanceModal()">
+            <div class="section-title">
+                Performance Dashboard
+                <span>📊</span>
+            </div>
+            <div class="performance-modern">
+                <div class="performance-card">
+                    <div class="performance-header">
+                        <div class="performance-title">Compressors</div>
+                        <div class="performance-icon">⚙️</div>
+                    </div>
+                    <div class="performance-values">
+                        <div class="value-group">
+                            <div class="value-label">FTD</div>
+                            <div class="value-main value-ftd">12</div>
+                            <div class="variance">Variance: -5</div>
+                        </div>
+                        <div class="value-group">
+                            <div class="value-label">MTD</div>
+                            <div class="value-main value-mtd">782</div>
+                            <div class="variance">Variance: -218</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-title">Holes</div>
-                    <div class="stat-value stat-ftd">635 <small>FTD</small></div>
-                    <div class="variance negative">Variance: -365</div>
-                    <div class="stat-value stat-mtd" style="margin-top:16px;">1,782 <small>MTD</small></div>
-                    <div class="variance negative">Variance: -1,231</div>
+                
+                <div class="performance-card">
+                    <div class="performance-header">
+                        <div class="performance-title">Holes</div>
+                        <div class="performance-icon">🕳️</div>
+                    </div>
+                    <div class="performance-values">
+                        <div class="value-group">
+                            <div class="value-label">FTD</div>
+                            <div class="value-main value-ftd">635</div>
+                            <div class="variance">Variance: -365</div>
+                        </div>
+                        <div class="value-group">
+                            <div class="value-label">MTD</div>
+                            <div class="value-main value-mtd">1,782</div>
+                            <div class="variance">Variance: -1,231</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- Running Hours, Loading, Key Parameters, Area Status, Machinery sections remain same as your previous version -->
-        <!-- ... paste your original boxes here if needed (Running Hours, Loading, Key Parameters, Area Status, Machinery) ... -->
-
+        
+        <!-- Running Hours -->
+        <div class="dashboard-box running-hours-box" id="running-hours-section" onclick="openRunningHoursModal()">
+            <div class="section-title">
+                Running Hours
+                <span>⏱️</span>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Operation Type</th><th class="text-right">FTD</th><th class="text-right">MTD</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Quarry Run Hours</td><td class="text-right"><span class="value-ftd">6.9</span></td><td class="text-right">169.3</td></tr>
+                    <tr><td>Loading Hours</td><td class="text-right"><span class="value-ftd">8.5</span></td><td class="text-right">253.6</td></tr>
+                    <tr><td>Breaking Hours</td><td class="text-right"><span class="value-ftd">6</span></td><td class="text-right">143.7</td></tr>
+                    <tr><td>Development Hours</td><td class="text-right"><span class="value-ftd">5.5</span></td><td class="text-right">62.3</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Loading -->
+        <div class="dashboard-box loading-box" id="loading-section" onclick="openLoadingModal()">
+            <div class="section-title">
+                Loading Start End Time
+                <span>🚚</span>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Start Time</th><th>End Time</th><th class="text-right">Tippers</th><th class="text-right">Machinery</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>9:15 AM</td><td>12:39 PM</td><td class="text-right">7</td><td class="text-right">3</td></tr>
+                    <tr><td>2:12 PM</td><td>7:51 PM</td><td class="text-right">10</td><td class="text-right">7</td></tr>
+                    <tr><td>9:36 PM</td><td>7:00 AM</td><td class="text-right">15</td><td class="text-right">9</td></tr>
+                    <tr><td colspan="4">
+                        <div class="loading-ftd-highlight">FTD - 87 Trips & 2436 Mt Qty</div>
+                    </td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Key Parameters -->
+        <div class="dashboard-box key-parameters-box">
+            <div class="section-title">
+                Key Parameters
+                <span>📈</span>
+            </div>
+            <table>
+                <thead>
+                    <tr><th></th><th class="text-right">FTD</th><th class="text-right">MTD</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Compressors</td><td class="text-right"><span class="value-ftd">12</span></td><td class="text-right">245</td></tr>
+                    <tr><td>NMR</td><td class="text-right"><span class="value-ftd">42</span></td><td class="text-right">78</td></tr>
+                    <tr><td>Holes</td><td class="text-right"><span class="value-ftd">850</span></td><td class="text-right">15,800</td></tr>
+                    <tr><td>Feets</td><td class="text-right"><span class="value-ftd">4,250</span></td><td class="text-right">79,000</td></tr>
+                    <tr><td>Production</td><td class="text-right"><span class="value-ftd">1,250</span></td><td class="text-right">22,500</td></tr>
+                    <tr><td>Boulder transport Trips</td><td class="text-right"><span class="value-ftd">456</span></td><td class="text-right">11,520</td></tr>
+                    <tr><td>Boulder transport Qty</td><td class="text-right"><span class="value-ftd">2,151</span></td><td class="text-right">36,255</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Area Wise Compressor Status -->
+        <div class="dashboard-box area-status-box">
+            <div class="section-title">
+                Area Wise Compressor Status
+                <span>🗺️</span>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Area</th><th class="text-right">FTD</th><th class="text-right">MTD</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>9 Ha – Pit 3</td><td class="text-right"><span class="value-ftd">5</span></td><td class="text-right">105</td></tr>
+                    <tr><td>Bench 1</td><td class="text-right"><span class="value-ftd">2</span></td><td class="text-right">40</td></tr>
+                    <tr><td>Bench 2</td><td class="text-right"><span class="value-ftd">2</span></td><td class="text-right">38</td></tr>
+                    <tr><td>Bench 3</td><td class="text-right"><span class="value-ftd">1</span></td><td class="text-right">22</td></tr>
+                    <tr><td>Bench 4</td><td class="text-right"><span class="value-ftd">1</span></td><td class="text-right">20</td></tr>
+                    <tr><td>Pit-2</td><td class="text-right"><span class="value-ftd">4</span></td><td class="text-right">80</td></tr>
+                    <tr class="total-row"><td>Total</td><td class="text-right">12</td><td class="text-right">245</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Machinery -->
+        <div class="dashboard-box machinery-box" id="machinery-section" onclick="openMachineryModal()">
+            <div class="section-title">
+                Machinery
+                <span>🔧</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Machine</th>
+                        <th>HMR Open/Close</th>
+                        <th class="text-right">W.Hours</th>
+                        <th class="text-right">Diesel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>SGX V - 1</td><td class="hmr-combined">113.5 / 119.6</td><td class="text-right">6.3</td><td class="text-right">230 L</td></tr>
+                    <tr><td>SGX V - 2</td><td class="hmr-combined">152.6 / 163.63</td><td class="text-right">7.1</td><td class="text-right">145 L</td></tr>
+                    <tr><td>Govinda - 1</td><td class="hmr-combined">114.6 / 121.3</td><td class="text-right">6.3</td><td class="text-right">230 L</td></tr>
+                    <tr><td>Govinda - 2</td><td class="hmr-combined">163.9 / 169.7</td><td class="text-right">3.6</td><td class="text-right">120 L</td></tr>
+                    <tr><td>Hyundai - rental</td><td class="hmr-combined">152.6 / 163.63</td><td class="text-right">4.6</td><td class="text-right">45 L</td></tr>
+                </tbody>
+            </table>
+            <div style="margin-top:20px; padding:14px; background:rgba(22,160,133,0.06); border-left:4px solid #16a085; border-radius:8px; font-size:14px; color:#0e6655;">
+                Remark: All machinery operating within normal parameters. SGX V-2 showing optimal fuel efficiency.
+            </div>
+        </div>
     </div>
-
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-        <button class="action-btn trial"      onclick="openModal('trialModal')">Trial Details</button>
-        <button class="action-btn explosive"  onclick="openModal('explosiveModal')">Explosive Data</button>
-        <button class="action-btn compressor" onclick="openModal('compressorModal')">Compressor</button>
-        <button class="action-btn nmr"        onclick="openModal('nmrModal')">NMR Payment</button>
-        <button class="action-btn revenue"    onclick="openModal('revenueModal')">Revenue Loss</button>
+    
+    <!-- Button Container -->
+    <div class="button-container">
+        <button class="data-button active" onclick="showData('trial')">Trial Details</button>
+        <button class="data-button" onclick="showData('explosive')">Explosive Data</button>
+        <button class="data-button" onclick="showData('compressor')">Compressor</button>
+        <button class="data-button" onclick="showData('nmr')">NMR Payment</button>
+        <button class="data-button" onclick="showData('revenue')">Revenue Loss</button>
     </div>
-
+    
+    <!-- Data Display Sections -->
+    <div id="trialData" class="data-display active">
+        <h2 class="data-title">Trial Data Details - Bench 3</h2>
+        <div class="trial-grid">
+            <div class="trial-column">
+                <div class="trial-row">
+                    <span class="trial-label">Date</span>
+                    <span class="trial-value">12-02-2026</span>
+                </div>
+                <div class="trial-row">
+                    <span class="trial-label">Area</span>
+                    <span class="trial-value highlight">9 H -- Bench 3</span>
+                </div>
+                <div class="trial-row">
+                    <span class="trial-label">Compressors</span>
+                    <span class="trial-value">11</span>
+                </div>
+                <div class="trial-row">
+                    <span class="trial-label">NMR</span>
+                    <span class="trial-value">11</span>
+                </div>
+                <div class="trial-row">
+                    <span class="trial-label">Holes</span>
+                    <span class="trial-value">785</span>
+                </div>
+                <div class="trial-row">
+                    <span class="trial-label">Feets</span>
+                    <span class="trial-value">3,925</span>
+                </div>
+            </div>
+            
+            <div class="trial-column">
+                <div class="trial-row">
+                    <span class="trial-label">Total Trips</span>
+                    <span class="trial-value green">21</span>
+                </div>
+                <div class="trial-row">
+                    <span class="trial-label">Total Quantity</span>
+                    <span class="trial-value green">3,469</span>
+                </div>
+                <div class="trial-row">
+                    <span class="trial-label">Loading Hours</span>
+                    <span class="trial-value">6.3</span>
+                </div>
+                <div class="trial-row">
+                    <span class="trial-label">Breaking Hours</span>
+                    <span class="trial-value">3.60</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Efficiency Rate</span>
+                        <span>85%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="trial-column">
+                <div class="recovery-grid">
+                    <div class="recovery-item">
+                        <div class="recovery-percent" style="color: #10b981;">83.40%</div>
+                        <div class="recovery-label">Recovery %</div>
+                    </div>
+                    <div class="recovery-item">
+                        <div class="recovery-percent" style="color: #3b82f6;">21.60%</div>
+                        <div class="recovery-label">Breaking %</div>
+                    </div>
+                </div>
+                <div style="margin-top: 25px; padding: 20px; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 10px;">
+                    <h3 style="color: #0369a1; margin-bottom: 12px; font-size: 16px;">Performance Summary</h3>
+                    <p style="color: #475569; font-size: 14px; line-height: 1.5;">
+                        Trial data shows optimal performance in Bench 3 area with 83.4% recovery rate. 
+                        Loading efficiency at 6.3 hours with 21 trips completed successfully.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="explosiveData" class="data-display">
+        <h2 class="data-title">Explosive Data Analysis</h2>
+        <div style="padding: 20px; background: #f8fafc; border-radius: 10px; margin-top: 20px;">
+            <p style="color: #475569; font-size: 16px; text-align: center;">
+                Explosive data details will be displayed here...
+            </p>
+        </div>
+    </div>
+    
+    <div id="compressorData" class="data-display">
+        <h2 class="data-title">Compressor Performance Metrics</h2>
+        <div style="padding: 20px; background: #f8fafc; border-radius: 10px; margin-top: 20px;">
+            <p style="color: #475569; font-size: 16px; text-align: center;">
+                Compressor performance metrics will be displayed here...
+            </p>
+        </div>
+    </div>
+    
+    <div id="nmrData" class="data-display">
+        <h2 class="data-title">NMR Payment Information</h2>
+        <div style="padding: 20px; background: #f8fafc; border-radius: 10px; margin-top: 20px;">
+            <p style="color: #475569; font-size: 16px; text-align: center;">
+                NMR payment details will be displayed here...
+            </p>
+        </div>
+    </div>
+    
+    <div id="revenueData" class="data-display">
+        <h2 class="data-title">Revenue Loss Analysis</h2>
+        <div style="padding: 20px; background: #f8fafc; border-radius: 10px; margin-top: 20px;">
+            <p style="color: #475569; font-size: 16px; text-align: center;">
+                Revenue loss analysis will be displayed here...
+            </p>
+        </div>
+    </div>
+    
     <!-- MODALS -->
-
-    <!-- Trial Details Modal -->
-    <div id="trialModal" class="modal">
+    <!-- Performance Modal -->
+    <div id="performanceModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('trialModal')">×</span>
-            <h2 class="modal-title">Trial Blast Details - 12/02/2026</h2>
-            <table>
-                <tr><th>Field</th><th>Value</th></tr>
-                <tr><td>Date</td><td><strong>12-02-2026</strong></td></tr>
-                <tr><td>Area</td><td><strong>9 Ha – Bench 3</strong></td></tr>
-                <tr><td>Compressors Deployed</td><td><strong>11</strong></td></tr>
-                <tr><td>NMR (Labour)</td><td><strong>11</strong></td></tr>
-                <tr><td>Total Trips (NMR)</td><td><strong>21</strong></td></tr>
-                <tr><td>Holes Drilled</td><td><strong>785</strong></td></tr>
-                <tr><td>Feets Drilled</td><td><strong>3,925 ft</strong></td></tr>
-                <tr><td>Loading Hours</td><td><strong>6.3 hrs</strong></td></tr>
-                <tr><td>Breaking Hours</td><td><strong>3.60 hrs</strong></td></tr>
-                <tr><td>Recovery % (Breaking)</td><td><strong>21.60%</strong></td></tr>
-                <tr><td>Breaking Efficiency</td><td><strong>83.40%</strong></td></tr>
-                <tr class="highlight-row"><td>Total Quantity Loaded</td><td><strong>3,469 Mt</strong></td></tr>
-            </table>
-            <div class="highlight-box" style="background:#e6fffa; color:#0c8599; border:1px solid #99e9f2;">Trial Summary: Satisfactory performance — moderate recovery observed on Bench 3</div>
-        </div>
-    </div>
-
-    <!-- Explosive Data Modal -->
-    <div id="explosiveModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('explosiveModal')">×</span>
-            <h2 class="modal-title">Explosive Consumption - January 2026</h2>
+            <span class="close" onclick="closePerformanceModal()">×</span>
+            <h2 class="modal-title">Month Wise Data - January 2026</h2>
             <table>
                 <thead>
-                    <tr><th>Date</th><th>ANFO (kg)</th><th>Detonator (nos)</th><th>Emulsion (kg)</th><th>Booster (kg)</th><th>Holes Charged</th><th>MT / kg</th></tr>
+                    <tr>
+                        <th>Date</th>
+                        <th class="text-right">Compressor</th>
+                        <th class="text-right">Holes</th>
+                        <th class="text-right">Feets</th>
+                        <th class="text-right">NMR</th>
+                        <th class="text-center">Gap</th>
+                    </tr>
                 </thead>
                 <tbody>
-                    <tr><td>01-01</td><td>4,850</td><td>1,420</td><td>680</td><td>95</td><td>812</td><td>2.18</td></tr>
-                    <tr><td>02-01</td><td>5,120</td><td>1,510</td><td>720</td><td>102</td><td>845</td><td>2.05</td></tr>
-                    <tr><td>03-01</td><td>4,920</td><td>1,450</td><td>690</td><td>98</td><td>810</td><td>2.22</td></tr>
-                    <tr><td>04-01</td><td>5,310</td><td>1,580</td><td>760</td><td>110</td><td>880</td><td>2.10</td></tr>
-                    <tr class="total-row"><td><strong>Total (MTD)</strong></td><td><strong>98,450</strong></td><td><strong>28,900</strong></td><td><strong>13,800</strong></td><td><strong>1,980</strong></td><td><strong>16,420</strong></td><td><strong>2.14 avg</strong></td></tr>
+                    <tr><td>01-01-2026</td><td class="text-right">11</td><td class="text-right">653</td><td class="text-right">3,465</td><td class="text-right">9</td><td class="text-center gap-red">6 / 347</td></tr>
+                    <tr><td>02-01-2026</td><td class="text-right">9</td><td class="text-right">785</td><td class="text-right">4,652</td><td class="text-right">12</td><td class="text-center gap-red">8 / 215</td></tr>
+                    <tr><td>03-01-2026</td><td class="text-right">10</td><td class="text-right">720</td><td class="text-right">4,120</td><td class="text-right">11</td><td class="text-center gap-red">7 / 280</td></tr>
+                    <tr><td>04-01-2026</td><td class="text-right">12</td><td class="text-right">810</td><td class="text-right">4,850</td><td class="text-right">14</td><td class="text-center gap-red">5 / 190</td></tr>
+                    <tr><td>05-01-2026</td><td class="text-right">11</td><td class="text-right">790</td><td class="text-right">4,720</td><td class="text-right">10</td><td class="text-center gap-red">6 / 210</td></tr>
+                    <tr><td>06-01-2026</td><td class="text-right">14</td><td class="text-right">850</td><td class="text-right">5,100</td><td class="text-right">16</td><td class="text-center gap-red">3 / 150</td></tr>
+                    <tr><td>07-01-2026</td><td class="text-right">13</td><td class="text-right">830</td><td class="text-right">4,950</td><td class="text-right">15</td><td class="text-center gap-red">4 / 170</td></tr>
+                    <tr><td>08-01-2026</td><td class="text-right">12</td><td class="text-right">800</td><td class="text-right">4,800</td><td class="text-right">14</td><td class="text-center gap-red">5 / 200</td></tr>
+                    <tr class="total-row">
+                        <td>Total</td>
+                        <td class="text-right">92</td>
+                        <td class="text-right">6,238</td>
+                        <td class="text-right">36,657</td>
+                        <td class="text-right">101</td>
+                        <td class="text-center gap-red">44 / 1,762</td>
+                    </tr>
                 </tbody>
             </table>
-            <div class="highlight-box" style="background:#fff3cd; color:#856404; border:1px solid #ffeeba;">Avg Explosive Factor: 0.47 kg/Mt — within acceptable range (target < 0.50)</div>
+            <div style="margin-top:24px; padding:16px; background:rgba(39,174,96,0.08); border-left:4px solid #27ae60; border-radius:8px; font-size:17px; font-weight:600; text-align:center; color:#1e8449;">
+                Compressor Achv 71%  |  Holes Achv 72%
+            </div>
         </div>
     </div>
-
-    <!-- Compressor Modal -->
-    <div id="compressorModal" class="modal">
+    
+    <!-- Running Hours Modal -->
+    <div id="runningHoursModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('compressorModal')">×</span>
-            <h2 class="modal-title">Compressor Performance Log - January 2026</h2>
+            <span class="close" onclick="closeRunningHoursModal()">×</span>
+            <h2 class="modal-title">Month Wise Running Hours - January 2026</h2>
             <table>
                 <thead>
-                    <tr><th>Compressor ID</th><th>Area</th><th>FTD Hours</th><th>MTD Hours</th><th>Avg Pressure (psi)</th><th>Downtime (hrs)</th><th>Remarks</th></tr>
+                    <tr>
+                        <th>Date</th>
+                        <th class="text-right">Quarry Run</th>
+                        <th class="text-right">Loading</th>
+                        <th class="text-right">Breaking</th>
+                        <th class="text-right">Development</th>
+                        <th class="text-right">Total Hours</th>
+                    </tr>
                 </thead>
                 <tbody>
-                    <tr><td>COMP-01</td><td>9 Ha Pit-3</td><td>8.4</td><td>198</td><td>102</td><td>0.6</td><td>Stable</td></tr>
-                    <tr><td>COMP-05</td><td>Bench-2</td><td>7.8</td><td>165</td><td>98</td><td>1.2</td><td>Filter change pending</td></tr>
-                    <tr><td>COMP-12</td><td>Pit-2</td><td>9.1</td><td>212</td><td>105</td><td>0.3</td><td>Optimal</td></tr>
-                    <tr class="total-row"><td colspan="2"><strong>Total</strong></td><td><strong>12</strong></td><td><strong>245</strong></td><td><strong>—</strong></td><td><strong>4.8</strong></td><td>—</td></tr>
+                    <tr><td>01-01-2026</td><td class="text-right">8.2</td><td class="text-right">10.5</td><td class="text-right">7.5</td><td class="text-right">6.0</td><td class="text-right">32.2</td></tr>
+                    <tr><td>02-01-2026</td><td class="text-right">7.8</td><td class="text-right">9.8</td><td class="text-right">7.0</td><td class="text-right">5.7</td><td class="text-right">30.3</td></tr>
+                    <tr><td>03-01-2026</td><td class="text-right">8.5</td><td class="text-right">10.2</td><td class="text-right">6.8</td><td class="text-right">6.2</td><td class="text-right">31.7</td></tr>
+                    <tr><td>04-01-2026</td><td class="text-right">8.0</td><td class="text-right">11.0</td><td class="text-right">7.2</td><td class="text-right">5.5</td><td class="text-right">31.7</td></tr>
+                    <tr><td>05-01-2026</td><td class="text-right">7.9</td><td class="text-right">9.5</td><td class="text-right">7.0</td><td class="text-right">6.1</td><td class="text-right">30.5</td></tr>
+                    <tr><td>06-01-2026</td><td class="text-right">8.3</td><td class="text-right">10.8</td><td class="text-right">6.5</td><td class="text-right">5.8</td><td class="text-right">31.4</td></tr>
+                    <tr><td>07-01-2026</td><td class="text-right">8.1</td><td class="text-right">10.0</td><td class="text-right">7.1</td><td class="text-right">6.3</td><td class="text-right">31.5</td></tr>
+                    <tr><td>08-01-2026</td><td class="text-right">6.9</td><td class="text-right">8.5</td><td class="text-right">6.0</td><td class="text-right">5.5</td><td class="text-right">26.9</td></tr>
+                    <tr class="total-row">
+                        <td>Total</td>
+                        <td class="text-right">63.7</td>
+                        <td class="text-right">80.3</td>
+                        <td class="text-right">55.1</td>
+                        <td class="text-right">47.1</td>
+                        <td class="text-right">246.2</td>
+                    </tr>
                 </tbody>
             </table>
-            <div class="highlight-box" style="background:#d4edda; color:#155724; border:1px solid #c3e6cb;">Overall Availability: 96.2% — Good compressor fleet health</div>
         </div>
     </div>
-
-    <!-- NMR Payment Modal -->
-    <div id="nmrModal" class="modal">
+    
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('nmrModal')">×</span>
-            <h2 class="modal-title">NMR Attendance & Payment Summary - January 2026</h2>
+            <span class="close" onclick="closeLoadingModal()">×</span>
+            <h2 class="modal-title">DAILY LOG SHEET – MONTHLY (SAMPLE DATA)</h2>
+            <p style="text-align:center; font-size:19px; margin:20px 0; font-weight:600;">Month: January  Year: 2026</p>
             <table>
                 <thead>
-                    <tr><th>Date</th><th>NMR Count</th><th>Man-days</th><th>Trips Completed</th><th>Rate/day (₹)</th><th>Est. Amount (₹)</th></tr>
+                    <tr>
+                        <th>Date</th>
+                        <th>Shift</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th class="text-right">Tippers</th>
+                        <th class="text-right">Machinery</th>
+                        <th class="text-right">Trips</th>
+                    </tr>
                 </thead>
                 <tbody>
-                    <tr><td>01-01</td><td>42</td><td>378</td><td>68</td><td>950</td><td>3,59,100</td></tr>
-                    <tr><td>05-01</td><td>38</td><td>342</td><td>77</td><td>950</td><td>3,24,900</td></tr>
-                    <tr><td>10-01</td><td>45</td><td>405</td><td>92</td><td>950</td><td>3,84,750</td></tr>
-                    <tr class="total-row"><td><strong>Total MTD</strong></td><td><strong>78 avg</strong></td><td><strong>6,820</strong></td><td><strong>1,450</strong></td><td>—</td><td><strong>₹64,79,000</strong></td></tr>
+                    <tr><td rowspan="4">01-01-2026</td><td>Morning</td><td>9:10 AM</td><td>12:30 PM</td><td class="text-right">6</td><td class="text-right">3</td><td class="text-right">8</td></tr>
+                    <tr><td>Evening</td><td>2:05 PM</td><td>7:40 PM</td><td class="text-right">9</td><td class="text-right">6</td><td class="text-right">21</td></tr>
+                    <tr><td>Night</td><td>9:30 PM</td><td>6:50 AM</td><td class="text-right">11</td><td class="text-right">8</td><td class="text-right">39</td></tr>
+                    <tr><td colspan="6" style="font-weight:bold; text-align:right;">Daily Total Trips</td><td class="text-right" style="font-weight:bold;">68</td></tr>
+                    <tr><td rowspan="4">02-01-2026</td><td>Morning</td><td>9:20 AM</td><td>12:45 PM</td><td class="text-right">7</td><td class="text-right">4</td><td class="text-right">10</td></tr>
+                    <tr><td>Evening</td><td>2:15 PM</td><td>7:55 PM</td><td class="text-right">10</td><td class="text-right">7</td><td class="text-right">24</td></tr>
+                    <tr><td>Night</td><td>9:40 PM</td><td>7:10 AM</td><td class="text-right">11</td><td class="text-right">9</td><td class="text-right">41</td></tr>
+                    <tr><td colspan="6" style="font-weight:bold; text-align:right;">Daily Total Trips</td><td class="text-right" style="font-weight:bold;">75</td></tr>
+                    <tr><td rowspan="4">03-01-2026</td><td>Morning</td><td>9:05 AM</td><td>12:55 PM</td><td class="text-right">8</td><td class="text-right">4</td><td class="text-right">12</td></tr>
+                    <tr><td>Evening</td><td>1:55 PM</td><td>8:10 PM</td><td class="text-right">11</td><td class="text-right">7</td><td class="text-right">28</td></tr>
+                    <tr><td>Night</td><td>9:15 PM</td><td>7:05 AM</td><td class="text-right">13</td><td class="text-right">9</td><td class="text-right">45</td></tr>
+                    <tr><td colspan="6" style="font-weight:bold; text-align:right;">Daily Total Trips</td><td class="text-right" style="font-weight:bold;">85</td></tr>
+                    <tr><td rowspan="4">04-01-2026</td><td>Morning</td><td>9:25 AM</td><td>1:10 PM</td><td class="text-right">7</td><td class="text-right">5</td><td class="text-right">14</td></tr>
+                    <tr><td>Evening</td><td>2:20 PM</td><td>7:45 PM</td><td class="text-right">12</td><td class="text-right">8</td><td class="text-right">32</td></tr>
+                    <tr><td>Night</td><td>9:45 PM</td><td>6:40 AM</td><td class="text-right">14</td><td class="text-right">10</td><td class="text-right">48</td></tr>
+                    <tr><td colspan="6" style="font-weight:bold; text-align:right;">Daily Total Trips</td><td class="text-right" style="font-weight:bold;">94</td></tr>
+                    <tr><td rowspan="4">05-01-2026</td><td>Morning</td><td>8:55 AM</td><td>12:40 PM</td><td class="text-right">6</td><td class="text-right">3</td><td class="text-right">9</td></tr>
+                    <tr><td>Evening</td><td>2:00 PM</td><td>8:00 PM</td><td class="text-right">10</td><td class="text-right">6</td><td class="text-right">26</td></tr>
+                    <tr><td>Night</td><td>9:20 PM</td><td>7:15 AM</td><td class="text-right">12</td><td class="text-right">8</td><td class="text-right">42</td></tr>
+                    <tr><td colspan="6" style="font-weight:bold; text-align:right;">Daily Total Trips</td><td class="text-right" style="font-weight:bold;">77</td></tr>
+                    <tr><td rowspan="4">06-01-2026</td><td>Morning</td><td>9:30 AM</td><td>1:05 PM</td><td class="text-right">9</td><td class="text-right">5</td><td class="text-right">15</td></tr>
+                    <tr><td>Evening</td><td>2:10 PM</td><td>7:30 PM</td><td class="text-right">13</td><td class="text-right">8</td><td class="text-right">35</td></tr>
+                    <tr><td>Night</td><td>10:00 PM</td><td>6:55 AM</td><td class="text-right">15</td><td class="text-right">10</td><td class="text-right">52</td></tr>
+                    <tr><td colspan="6" style="font-weight:bold; text-align:right;">Daily Total Trips</td><td class="text-right" style="font-weight:bold;">102</td></tr>
+                    <tr><td rowspan="4">07-01-2026</td><td>Morning</td><td>9:00 AM</td><td>12:50 PM</td><td class="text-right">7</td><td class="text-right">4</td><td class="text-right">11</td></tr>
+                    <tr><td>Evening</td><td>2:30 PM</td><td>8:20 PM</td><td class="text-right">11</td><td class="text-right">7</td><td class="text-right">30</td></tr>
+                    <tr><td>Night</td><td>9:50 PM</td><td>7:30 AM</td><td class="text-right">13</td><td class="text-right">9</td><td class="text-right">46</td></tr>
+                    <tr><td colspan="6" style="font-weight:bold; text-align:right;">Daily Total Trips</td><td class="text-right" style="font-weight:bold;">87</td></tr>
+                    <tr class="total-row">
+                        <td colspan="6">Total Trips (Month)</td>
+                        <td class="text-right">274</td>
+                    </tr>
                 </tbody>
             </table>
-            <div class="highlight-box" style="background:#cce5ff; color:#004085; border:1px solid #b8daff;">Pending Payment (as of 25/01): ₹12.4 Lakhs</div>
+            <div style="margin-top:24px; padding:16px; background:rgba(52,152,219,0.08); border-left:4px solid #2980b9; border-radius:8px; font-size:17px; font-weight:600; text-align:center; color:#1e6bbf;">
+                Total trips - 87 , Qty - 2343 Mt
+            </div>
         </div>
     </div>
-
-    <!-- Revenue Loss Modal -->
-    <div id="revenueModal" class="modal">
+    
+    <!-- Machinery Modal -->
+    <div id="machineryModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('revenueModal')">×</span>
-            <h2 class="modal-title">Estimated Revenue Loss Analysis - January 2026</h2>
-            <table>
+            <span class="close" onclick="closeMachineryModal()">×</span>
+            <h2 class="modal-title">MONTHLY WORKING HOURS & DIESEL CONSUMPTION</h2>
+            <p style="text-align:center; font-size:19px; margin:22px 0; font-weight:600;">Month: January 2026</p>
+            <table class="machinery-table">
                 <thead>
-                    <tr><th>Reason</th><th>FTD Impact (Mt)</th><th>MTD Impact (Mt)</th><th>Rate (₹/Mt)</th><th>Loss (₹)</th></tr>
+                    <tr>
+                        <th>Date</th>
+                        <th class="text-center">SGX V-1 (Hrs / L)</th>
+                        <th class="text-center">SGX V-2 (Hrs / L)</th>
+                        <th class="text-center">Govinda-1 (Hrs / L)</th>
+                        <th class="text-center">Govinda-2 (Hrs / L)</th>
+                        <th class="text-center">Hyundai – Rental (Hrs / L)</th>
+                        <th class="text-center">Total Hrs</th>
+                        <th class="text-center">Total Diesel (L)</th>
+                    </tr>
                 </thead>
                 <tbody>
-                    <tr><td>Compressor Shortage</td><td>-180</td><td>-2,450</td><td>1,450</td><td>₹35,52,500</td></tr>
-                    <tr><td>Drilling Delay</td><td>-95</td><td>-1,320</td><td>1,450</td><td>₹19,14,000</td></tr>
-                    <tr><td>Loading / Transport Bottleneck</td><td>-70</td><td>-980</td><td>1,450</td><td>₹14,21,000</td></tr>
-                    <tr><td>Rain / Weather</td><td>-45</td><td>-610</td><td>1,450</td><td>₹8,84,500</td></tr>
-                    <tr class="total-row"><td><strong>Total Estimated Loss</strong></td><td><strong>-390</strong></td><td><strong>-5,360</strong></td><td>—</td><td><strong>₹77,72,000</strong></td></tr>
+                    <tr>
+                        <td>01-01-2026</td>
+                        <td class="hmr-combined text-center">6.4 / 225</td>
+                        <td class="hmr-combined text-center">7.0 / 150</td>
+                        <td class="hmr-combined text-center">6.2 / 235</td>
+                        <td class="hmr-combined text-center">3.8 / 118</td>
+                        <td class="hmr-combined text-center">4.5 / 48</td>
+                        <td class="text-center">27.9</td>
+                        <td class="text-center">776</td>
+                    </tr>
+                    <tr>
+                        <td>02-01-2026</td>
+                        <td class="hmr-combined text-center">6.1 / 220</td>
+                        <td class="hmr-combined text-center">6.8 / 142</td>
+                        <td class="hmr-combined text-center">6.5 / 240</td>
+                        <td class="hmr-combined text-center">3.5 / 115</td>
+                        <td class="hmr-combined text-center">4.2 / 44</td>
+                        <td class="text-center">27.1</td>
+                        <td class="text-center">761</td>
+                    </tr>
+                    <tr>
+                        <td>03-01-2026</td>
+                        <td class="hmr-combined text-center">6.6 / 235</td>
+                        <td class="hmr-combined text-center">7.3 / 155</td>
+                        <td class="hmr-combined text-center">6.4 / 228</td>
+                        <td class="hmr-combined text-center">3.9 / 125</td>
+                        <td class="hmr-combined text-center">4.8 / 50</td>
+                        <td class="text-center">29.0</td>
+                        <td class="text-center">793</td>
+                    </tr>
+                    <tr>
+                        <td>04-01-2026</td>
+                        <td class="hmr-combined text-center">6.0 / 215</td>
+                        <td class="hmr-combined text-center">6.9 / 148</td>
+                        <td class="hmr-combined text-center">6.1 / 225</td>
+                        <td class="hmr-combined text-center">3.4 / 112</td>
+                        <td class="hmr-combined text-center">4.3 / 46</td>
+                        <td class="text-center">26.7</td>
+                        <td class="text-center">746</td>
+                    </tr>
+                    <tr>
+                        <td>05-01-2026</td>
+                        <td class="hmr-combined text-center">6.5 / 230</td>
+                        <td class="hmr-combined text-center">7.2 / 152</td>
+                        <td class="hmr-combined text-center">6.6 / 238</td>
+                        <td class="hmr-combined text-center">3.7 / 120</td>
+                        <td class="hmr-combined text-center">4.7 / 49</td>
+                        <td class="text-center">28.7</td>
+                        <td class="text-center">789</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td><strong>5-Day Total</strong></td>
+                        <td class="text-center"><strong>31.6 / 1125</strong></td>
+                        <td class="text-center"><strong>35.2 / 747</strong></td>
+                        <td class="text-center"><strong>31.8 / 1166</strong></td>
+                        <td class="text-center"><strong>18.3 / 590</strong></td>
+                        <td class="text-center"><strong>22.5 / 237</strong></td>
+                        <td class="text-center"><strong>139.4</strong></td>
+                        <td class="text-center"><strong>3865</strong></td>
+                    </tr>
                 </tbody>
             </table>
-            <div class="highlight-box" style="background:#f8d7da; color:#721c24; border:1px solid #f5c6cb;">YTD Revenue Loss: ₹1.42 Cr — Action recommended on compressor & drilling availability</div>
+            <div style="margin-top:28px; padding:18px; background:rgba(22,160,133,0.08); border-left:5px solid #16a085; border-radius:8px; font-size:17px; font-weight:600; text-align:center; color:#0e6655;">
+                Total Working Hours: 139.4 hours  |  Total Diesel Consumption: 3,865 liters
+            </div>
         </div>
     </div>
-
+    
     <script>
-        function openModal(id) { document.getElementById(id).style.display = 'block'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        // Close when clicking outside modal
+        // Modal Functions
+        function openPerformanceModal() { document.getElementById('performanceModal').style.display = 'block'; }
+        function closePerformanceModal() { document.getElementById('performanceModal').style.display = 'none'; }
+        function openRunningHoursModal() { document.getElementById('runningHoursModal').style.display = 'block'; }
+        function closeRunningHoursModal() { document.getElementById('runningHoursModal').style.display = 'none'; }
+        function openLoadingModal() { document.getElementById('loadingModal').style.display = 'block'; }
+        function closeLoadingModal() { document.getElementById('loadingModal').style.display = 'none'; }
+        function openMachineryModal() { document.getElementById('machineryModal').style.display = 'block'; }
+        function closeMachineryModal() { document.getElementById('machineryModal').style.display = 'none'; }
+        
+        // Button Data Display Function
+        function showData(dataType) {
+            // Hide all data displays
+            document.querySelectorAll('.data-display').forEach(display => {
+                display.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.data-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected data display
+            document.getElementById(dataType + 'Data').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+        
+        // Close modals when clicking outside
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
+                event.target.style.display = "none";
             }
         }
     </script>
-
 </body>
 </html>
