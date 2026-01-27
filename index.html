@@ -281,6 +281,28 @@
             border-left: 4px solid #3498db;
         }
         
+        /* Clickable row styles */
+        .clickable-row {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .clickable-row:hover {
+            background-color: #e8f4fd !important;
+        }
+        
+        .hour-header {
+            cursor: pointer;
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .hour-header:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
         @media (max-width: 1200px) {
             .dashboard-container {
                 grid-template-columns: 1fr;
@@ -596,7 +618,10 @@
         
         <!-- Box 4: Hourly Tipper Movement -->
         <div class="section-box">
-            <div class="section-title">Hourly Tipper Movement</div>
+            <div class="section-title">
+                <div class="section-title-text">Hourly Tipper Movement</div>
+                <button class="details-btn" id="hourlyMovementBtn">View Detailed Report</button>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -608,100 +633,100 @@
                         <th>Late</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>08 am - 09 am</td>
+                <tbody id="hourlyMovementTable">
+                    <tr class="clickable-row" data-hour="08">
+                        <td><span class="hour-header">08 am - 09 am</span></td>
                         <td>2</td>
                         <td class="highlight-red">1</td>
-                        <td>08 pm - 09 pm</td>
+                        <td><span class="hour-header">08 pm - 09 pm</span></td>
                         <td>1</td>
                         <td>0</td>
                     </tr>
-                    <tr>
-                        <td>09 am - 10 am</td>
+                    <tr class="clickable-row" data-hour="09">
+                        <td><span class="hour-header">09 am - 10 am</span></td>
                         <td>2</td>
                         <td class="highlight-red">3</td>
-                        <td>09 pm - 10 pm</td>
+                        <td><span class="hour-header">09 pm - 10 pm</span></td>
                         <td>4</td>
                         <td class="highlight-red">1</td>
                     </tr>
-                    <tr>
-                        <td>10 am - 11 am</td>
+                    <tr class="clickable-row" data-hour="10">
+                        <td><span class="hour-header">10 am - 11 am</span></td>
                         <td>0</td>
                         <td>0</td>
-                        <td>10 pm - 11 pm</td>
+                        <td><span class="hour-header">10 pm - 11 pm</span></td>
                         <td>2</td>
                         <td class="highlight-red">1</td>
                     </tr>
-                    <tr>
-                        <td>11 am - 12 pm</td>
+                    <tr class="clickable-row" data-hour="11">
+                        <td><span class="hour-header">11 am - 12 pm</span></td>
                         <td>4</td>
                         <td class="highlight-red">1</td>
-                        <td>11 pm - 12 am</td>
+                        <td><span class="hour-header">11 pm - 12 am</span></td>
                         <td>5</td>
                         <td class="highlight-red">2</td>
                     </tr>
-                    <tr>
-                        <td>12 pm - 01 pm</td>
+                    <tr class="clickable-row" data-hour="12">
+                        <td><span class="hour-header">12 pm - 01 pm</span></td>
                         <td>3</td>
                         <td>0</td>
-                        <td>12 am - 01 am</td>
+                        <td><span class="hour-header">12 am - 01 am</span></td>
                         <td>1</td>
                         <td>0</td>
                     </tr>
-                    <tr>
-                        <td>01 pm - 02 pm</td>
+                    <tr class="clickable-row" data-hour="13">
+                        <td><span class="hour-header">01 pm - 02 pm</span></td>
                         <td>2</td>
                         <td>0</td>
-                        <td>01 am - 02 am</td>
+                        <td><span class="hour-header">01 am - 02 am</span></td>
                         <td>2</td>
                         <td>0</td>
                     </tr>
-                    <tr>
-                        <td>02 pm - 03 pm</td>
+                    <tr class="clickable-row" data-hour="14">
+                        <td><span class="hour-header">02 pm - 03 pm</span></td>
                         <td>1</td>
                         <td>0</td>
-                        <td>02 am - 03 am</td>
+                        <td><span class="hour-header">02 am - 03 am</span></td>
                         <td>1</td>
                         <td>0</td>
                     </tr>
-                    <tr>
-                        <td>03 pm - 04 pm</td>
+                    <tr class="clickable-row" data-hour="15">
+                        <td><span class="hour-header">03 pm - 04 pm</span></td>
                         <td>4</td>
                         <td class="highlight-red">1</td>
-                        <td>03 am - 04 am</td>
+                        <td><span class="hour-header">03 am - 04 am</span></td>
                         <td>5</td>
                         <td>0</td>
                     </tr>
-                    <tr>
-                        <td>04 pm - 05 pm</td>
+                    <tr class="clickable-row" data-hour="16">
+                        <td><span class="hour-header">04 pm - 05 pm</span></td>
                         <td>3</td>
                         <td class="highlight-red">1</td>
-                        <td>04 am - 05 am</td>
+                        <td><span class="hour-header">04 am - 05 am</span></td>
                         <td>1</td>
                         <td class="highlight-red">1</td>
                     </tr>
-                    <tr>
-                        <td>05 pm - 06 pm</td>
+                    <tr class="clickable-row" data-hour="17">
+                        <td><span class="hour-header">05 pm - 06 pm</span></td>
                         <td>3</td>
                         <td class="highlight-red">2</td>
-                        <td>05 am - 06 am</td>
+                        <td><span class="hour-header">05 am - 06 am</span></td>
                         <td>2</td>
                         <td>0</td>
                     </tr>
-                    <tr>
-                        <td>06 pm - 07 pm</td>
+                    <tr class="clickable-row" data-hour="18">
+                        <td><span class="hour-header">06 pm - 07 pm</span></td>
                         <td>0</td>
                         <td>0</td>
-                        <td>06 am - 07 am</td>
+                        <td><span class="hour-header">06 am - 07 am</span></td>
                         <td>3</td>
                         <td class="highlight-red">1</td>
                     </tr>
-                    <tr>
-                        <td>07 pm - 08 pm</td>
+                    <tr class="clickable-row" data-hour="19">
+                        <td><span class="hour-header">07 pm - 08 pm</span></td>
                         <td>2</td>
                         <td>0</td>
-                        <td>07 am - 08 am</td>
+                        <td><span class="hour-header">07 am - 08 am</span></td>
                         <td>4</td>
                         <td class="highlight-red">2</td>
                     </tr>
@@ -991,7 +1016,132 @@
         </div>
     </div>
 
+    <!-- Hourly Tipper Movement Detailed Report Modal -->
+    <div class="modal-overlay" id="hourlyMovementModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="hourlyModalTitle">Hourly Tipper Movement Detailed Report</h2>
+                <button class="close-btn" id="closeHourlyMovement">&times;</button>
+            </div>
+            
+            <div id="hourlyReportContent">
+                <!-- Content will be loaded dynamically based on the hour clicked -->
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Vehicle No</th>
+                                <th>In Time</th>
+                                <th>Out Time</th>
+                                <th>Time Difference (min)</th>
+                                <th>Tonnage (T)</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detailedReportTable">
+                            <!-- Data will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="hourlySummary" style="margin-top: 25px; padding: 15px; background-color: #f8f9fa; border-radius: 8px;">
+                    <p style="margin-bottom: 10px;"><strong>Hourly Summary:</strong></p>
+                    <ul style="padding-left: 20px;" id="summaryList">
+                        <!-- Summary will be inserted here by JavaScript -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Hourly tipper movement data
+        const hourlyData = {
+            "08": [
+                {vehicleNo: "AP39U00095", inTime: "08:00", outTime: "08:07", timeDiff: 7, tonnage: 22, remarks: ""},
+                {vehicleNo: "AP39UW9881", inTime: "08:05", outTime: "08:12", timeDiff: 7, tonnage: 23, remarks: ""},
+                {vehicleNo: "AP39WF2057", inTime: "08:10", outTime: "08:18", timeDiff: 8, tonnage: 21, remarks: ""},
+                {vehicleNo: "AP39U00097", inTime: "08:15", outTime: "08:26", timeDiff: 11, tonnage: 27, remarks: "Late"},
+                {vehicleNo: "AP39UW4652", inTime: "08:20", outTime: "08:28", timeDiff: 8, tonnage: 19, remarks: ""},
+                {vehicleNo: "AP39WF2058", inTime: "08:25", outTime: "08:33", timeDiff: 8, tonnage: 20, remarks: ""}
+            ],
+            "09": [
+                {vehicleNo: "AP39UW4651", inTime: "08:30", outTime: "08:37", timeDiff: 7, tonnage: 18, remarks: ""},
+                {vehicleNo: "AP39WC0927", inTime: "08:35", outTime: "08:43", timeDiff: 8, tonnage: 22, remarks: ""},
+                {vehicleNo: "AP39WF2052", inTime: "08:40", outTime: "08:49", timeDiff: 9, tonnage: 23, remarks: ""},
+                {vehicleNo: "AP39U00095", inTime: "08:45", outTime: "08:55", timeDiff: 10, tonnage: 28, remarks: "Late"},
+                {vehicleNo: "AP39UW9880", inTime: "08:50", outTime: "08:57", timeDiff: 7, tonnage: 21, remarks: ""},
+                {vehicleNo: "AP39WC0926", inTime: "08:55", outTime: "09:03", timeDiff: 8, tonnage: 22, remarks: ""},
+                {vehicleNo: "AP39U00097", inTime: "09:00", outTime: "09:08", timeDiff: 8, tonnage: 20, remarks: ""},
+                {vehicleNo: "AP39UW9881", inTime: "09:05", outTime: "09:15", timeDiff: 10, tonnage: 29, remarks: "Late"}
+            ],
+            "10": [
+                {vehicleNo: "AP39WF2057", inTime: "09:10", outTime: "09:18", timeDiff: 8, tonnage: 18, remarks: ""},
+                {vehicleNo: "AP39UW4652", inTime: "09:15", outTime: "09:22", timeDiff: 7, tonnage: 19, remarks: ""},
+                {vehicleNo: "AP39WF2058", inTime: "09:20", outTime: "09:31", timeDiff: 11, tonnage: 28, remarks: "Late"},
+                {vehicleNo: "AP39UW4651", inTime: "09:25", outTime: "09:32", timeDiff: 7, tonnage: 21, remarks: ""},
+                {vehicleNo: "AP39WC0927", inTime: "09:30", outTime: "09:38", timeDiff: 8, tonnage: 22, remarks: ""},
+                {vehicleNo: "AP39WF2052", inTime: "09:35", outTime: "09:43", timeDiff: 8, tonnage: 20, remarks: ""},
+                {vehicleNo: "AP39U00095", inTime: "09:40", outTime: "09:48", timeDiff: 8, tonnage: 23, remarks: ""},
+                {vehicleNo: "AP39UW9880", inTime: "09:45", outTime: "09:52", timeDiff: 7, tonnage: 21, remarks: ""}
+            ],
+            "11": [
+                {vehicleNo: "AP39WC0926", inTime: "09:50", outTime: "09:58", timeDiff: 8, tonnage: 19, remarks: ""},
+                {vehicleNo: "AP39U00097", inTime: "09:55", outTime: "10:06", timeDiff: 11, tonnage: 26, remarks: "Late"},
+                {vehicleNo: "AP39UW9881", inTime: "10:00", outTime: "10:08", timeDiff: 8, tonnage: 23, remarks: ""},
+                {vehicleNo: "AP39WF2057", inTime: "10:05", outTime: "10:14", timeDiff: 9, tonnage: 20, remarks: ""},
+                {vehicleNo: "AP39UW4652", inTime: "10:10", outTime: "10:17", timeDiff: 7, tonnage: 22, remarks: ""},
+                {vehicleNo: "AP39WF2058", inTime: "10:15", outTime: "10:27", timeDiff: 12, tonnage: 27, remarks: "Late"},
+                {vehicleNo: "AP39UW4651", inTime: "10:20", outTime: "10:27", timeDiff: 7, tonnage: 21, remarks: ""}
+            ],
+            "12": [
+                {vehicleNo: "AP39U00095", inTime: "12:00", outTime: "12:08", timeDiff: 8, tonnage: 24, remarks: ""},
+                {vehicleNo: "AP39UW9881", inTime: "12:05", outTime: "12:13", timeDiff: 8, tonnage: 22, remarks: ""},
+                {vehicleNo: "AP39WF2057", inTime: "12:10", outTime: "12:19", timeDiff: 9, tonnage: 21, remarks: ""},
+                {vehicleNo: "AP39U00097", inTime: "12:15", outTime: "12:24", timeDiff: 9, tonnage: 25, remarks: ""}
+            ],
+            "13": [
+                {vehicleNo: "AP39UW4652", inTime: "13:00", outTime: "13:08", timeDiff: 8, tonnage: 20, remarks: ""},
+                {vehicleNo: "AP39WF2058", inTime: "13:05", outTime: "13:14", timeDiff: 9, tonnage: 23, remarks: ""},
+                {vehicleNo: "AP39UW4651", inTime: "13:10", outTime: "13:17", timeDiff: 7, tonnage: 19, remarks: ""}
+            ],
+            "14": [
+                {vehicleNo: "AP39WC0927", inTime: "14:00", outTime: "14:08", timeDiff: 8, tonnage: 22, remarks: ""},
+                {vehicleNo: "AP39WF2052", inTime: "14:05", outTime: "14:14", timeDiff: 9, tonnage: 24, remarks: ""}
+            ],
+            "15": [
+                {vehicleNo: "AP39U00095", inTime: "15:00", outTime: "15:08", timeDiff: 8, tonnage: 25, remarks: ""},
+                {vehicleNo: "AP39UW9880", inTime: "15:05", outTime: "15:12", timeDiff: 7, tonnage: 21, remarks: ""},
+                {vehicleNo: "AP39WC0926", inTime: "15:10", outTime: "15:18", timeDiff: 8, tonnage: 20, remarks: ""},
+                {vehicleNo: "AP39U00097", inTime: "15:15", outTime: "15:24", timeDiff: 9, tonnage: 26, remarks: ""},
+                {vehicleNo: "AP39UW9881", inTime: "15:20", outTime: "15:28", timeDiff: 8, tonnage: 23, remarks: ""}
+            ],
+            "16": [
+                {vehicleNo: "AP39WF2057", inTime: "16:00", outTime: "16:08", timeDiff: 8, tonnage: 22, remarks: ""},
+                {vehicleNo: "AP39UW4652", inTime: "16:05", outTime: "16:12", timeDiff: 7, tonnage: 21, remarks: ""},
+                {vehicleNo: "AP39WF2058", inTime: "16:10", outTime: "16:18", timeDiff: 8, tonnage: 24, remarks: ""},
+                {vehicleNo: "AP39UW4651", inTime: "16:15", outTime: "16:22", timeDiff: 7, tonnage: 20, remarks: ""},
+                {vehicleNo: "AP39WC0927", inTime: "16:20", outTime: "16:28", timeDiff: 8, tonnage: 23, remarks: ""}
+            ],
+            "17": [
+                {vehicleNo: "AP39WF2052", inTime: "17:00", outTime: "17:09", timeDiff: 9, tonnage: 25, remarks: ""},
+                {vehicleNo: "AP39U00095", inTime: "17:05", outTime: "17:14", timeDiff: 9, tonnage: 26, remarks: ""},
+                {vehicleNo: "AP39UW9880", inTime: "17:10", outTime: "17:17", timeDiff: 7, tonnage: 22, remarks: ""},
+                {vehicleNo: "AP39WC0926", inTime: "17:15", outTime: "17:23", timeDiff: 8, tonnage: 21, remarks: ""}
+            ],
+            "18": [
+                {vehicleNo: "AP39U00097", inTime: "18:00", outTime: "18:09", timeDiff: 9, tonnage: 24, remarks: ""},
+                {vehicleNo: "AP39UW9881", inTime: "18:05", outTime: "18:13", timeDiff: 8, tonnage: 23, remarks: ""},
+                {vehicleNo: "AP39WF2057", inTime: "18:10", outTime: "18:19", timeDiff: 9, tonnage: 22, remarks: ""}
+            ],
+            "19": [
+                {vehicleNo: "AP39UW4652", inTime: "19:00", outTime: "19:08", timeDiff: 8, tonnage: 21, remarks: ""},
+                {vehicleNo: "AP39WF2058", inTime: "19:05", outTime: "19:13", timeDiff: 8, tonnage: 24, remarks: ""},
+                {vehicleNo: "AP39UW4651", inTime: "19:10", outTime: "19:17", timeDiff: 7, tonnage: 20, remarks: ""},
+                {vehicleNo: "AP39WC0927", inTime: "19:15", outTime: "19:23", timeDiff: 8, tonnage: 22, remarks: ""}
+            ]
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
             // Highlight total rows
             const totalRows = document.querySelectorAll('.total-row');
@@ -1041,10 +1191,13 @@
             // Modal functionality
             const plantOperationBtn = document.getElementById('plantOperationBtn');
             const machineryBtn = document.getElementById('machineryBtn');
+            const hourlyMovementBtn = document.getElementById('hourlyMovementBtn');
             const plantOperationModal = document.getElementById('plantOperationModal');
             const machineryModal = document.getElementById('machineryModal');
+            const hourlyMovementModal = document.getElementById('hourlyMovementModal');
             const closePlantOperation = document.getElementById('closePlantOperation');
             const closeMachinery = document.getElementById('closeMachinery');
+            const closeHourlyMovement = document.getElementById('closeHourlyMovement');
             
             // Open Plant Operation modal
             plantOperationBtn.addEventListener('click', function() {
@@ -1055,6 +1208,14 @@
             // Open Machinery modal
             machineryBtn.addEventListener('click', function() {
                 machineryModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Open Hourly Movement modal from button
+            hourlyMovementBtn.addEventListener('click', function() {
+                // Default to 08:00 hour
+                loadHourlyData("08", "08 am - 09 am");
+                hourlyMovementModal.classList.add('active');
                 document.body.style.overflow = 'hidden';
             });
             
@@ -1070,6 +1231,12 @@
                 document.body.style.overflow = 'auto';
             });
             
+            // Close Hourly Movement modal
+            closeHourlyMovement.addEventListener('click', function() {
+                hourlyMovementModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+            
             // Close modals when clicking outside content
             window.addEventListener('click', function(event) {
                 if (event.target === plantOperationModal) {
@@ -1080,6 +1247,10 @@
                     machineryModal.classList.remove('active');
                     document.body.style.overflow = 'auto';
                 }
+                if (event.target === hourlyMovementModal) {
+                    hourlyMovementModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
             });
             
             // Close modals with Escape key
@@ -1087,9 +1258,92 @@
                 if (event.key === 'Escape') {
                     plantOperationModal.classList.remove('active');
                     machineryModal.classList.remove('active');
+                    hourlyMovementModal.classList.remove('active');
                     document.body.style.overflow = 'auto';
                 }
             });
+            
+            // Make hourly movement rows clickable
+            const clickableRows = document.querySelectorAll('.clickable-row');
+            clickableRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    const hour = this.getAttribute('data-hour');
+                    const hourText = this.querySelector('.hour-header').textContent;
+                    loadHourlyData(hour, hourText);
+                    hourlyMovementModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+            
+            // Function to load hourly data into modal
+            function loadHourlyData(hour, hourText) {
+                const data = hourlyData[hour] || [];
+                const tableBody = document.getElementById('detailedReportTable');
+                const modalTitle = document.getElementById('hourlyModalTitle');
+                const summaryList = document.getElementById('summaryList');
+                
+                // Update modal title
+                modalTitle.textContent = `Hourly Tipper Movement - ${hourText}`;
+                
+                // Clear existing rows
+                tableBody.innerHTML = '';
+                
+                let totalTonnage = 0;
+                let totalTime = 0;
+                let lateCount = 0;
+                
+                // Add data rows
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    
+                    // Add remark class for late entries
+                    const remarkClass = item.remarks === "Late" ? "status-critical status-badge" : "";
+                    const remarkDisplay = item.remarks ? `<span class="${remarkClass}">${item.remarks}</span>` : "";
+                    
+                    if (item.remarks === "Late") lateCount++;
+                    
+                    row.innerHTML = `
+                        <td>${item.vehicleNo}</td>
+                        <td>${item.inTime}</td>
+                        <td>${item.outTime}</td>
+                        <td>${item.timeDiff}</td>
+                        <td>${item.tonnage}</td>
+                        <td>${remarkDisplay}</td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                    
+                    totalTonnage += item.tonnage;
+                    totalTime += item.timeDiff;
+                });
+                
+                // Calculate averages
+                const avgTime = data.length > 0 ? (totalTime / data.length).toFixed(1) : 0;
+                const avgTonnage = data.length > 0 ? (totalTonnage / data.length).toFixed(1) : 0;
+                
+                // Update summary
+                summaryList.innerHTML = `
+                    <li>Total Trips: <strong>${data.length}</strong></li>
+                    <li>Total Tonnage: <strong>${totalTonnage} T</strong></li>
+                    <li>Average Time per Trip: <strong>${avgTime} minutes</strong></li>
+                    <li>Average Tonnage per Trip: <strong>${avgTonnage} T</strong></li>
+                    <li>Late Trips: <strong>${lateCount}</strong></li>
+                    ${data.length > 0 ? `<li>Efficiency: <strong>${((data.length * avgTonnage) / (data.length * 30) * 100).toFixed(1)}%</strong> (based on 30T capacity)</li>` : ''}
+                `;
+                
+                // Add total row if there's data
+                if (data.length > 0) {
+                    const totalRow = document.createElement('tr');
+                    totalRow.className = 'total-row';
+                    totalRow.innerHTML = `
+                        <td colspan="3"><strong>TOTAL</strong></td>
+                        <td><strong>${totalTime}</strong></td>
+                        <td><strong>${totalTonnage}</strong></td>
+                        <td><strong>${lateCount} Late</strong></td>
+                    `;
+                    tableBody.appendChild(totalRow);
+                }
+            }
         });
     </script>
 </body>
